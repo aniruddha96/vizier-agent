@@ -20,7 +20,7 @@ public class MacEditorLauncher implements EditorLauncher{
 				p = Runtime.getRuntime().exec(String.format("open %s", filePath));
 				return true;
 			} catch (Exception e) {
-				p = Runtime.getRuntime().exec(String.format("open \"TextEditor\" %s", filePath));
+				p = Runtime.getRuntime().exec(String.format("open -a TextEdit %s", filePath));
 				System.out.println(e.getMessage());
 				return false;
 			}
