@@ -4,6 +4,10 @@
 package com.vizier.agent.editor.impl;
 
 import com.vizier.agent.editor.EditorLauncher;
+import com.vizier.constants.VizierAgentConstants;
+
+import java.awt.*;
+import java.io.File;
 
 /**
  * @author aniruddha
@@ -12,7 +16,24 @@ import com.vizier.agent.editor.EditorLauncher;
 public class WindowsEditorLauncher implements EditorLauncher{
 
 	public boolean openDefaultEditor(String filePath) {
-		// TODO Auto-generated method stub
+		try
+		{
+			File file = new File(filePath);
+			if(!Desktop.isDesktopSupported())
+			{
+				System.out.println("not supported");
+				return false;
+			}
+			Desktop desktop = Desktop.getDesktop();
+			if(file.exists()) {
+				desktop.open(file);
+				return true;
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		return false;
 	}
 
