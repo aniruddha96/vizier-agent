@@ -15,4 +15,6 @@ public interface DirectoryInitializer {
 	public boolean createIniFile();
 	
 	public boolean getAllStubs(String serverAddress, String extractTo);
+
+	public boolean createTempFile(String filePath);
 }
