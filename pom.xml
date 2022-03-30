@@ -15,11 +15,10 @@
                     <target>7</target>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
-    <dependencies>
+	<dependencies>
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
             <groupId>commons-io</groupId>
