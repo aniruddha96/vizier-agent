@@ -58,7 +58,7 @@ public class Runner {
 		
 		// 3. Create a new python file
 		String[] pythonFilePath={VizierAgentConstants.directoryPath+ File.separator+args[0]};
-		
+		directoryInitializer.createTempFile(pythonFilePath[0]);
 		// 4. Fetch cell contents
 		//vizierBackendClient.fetchCellContentTo(cellIdentifier, pythonFilePath[0]);
 		
