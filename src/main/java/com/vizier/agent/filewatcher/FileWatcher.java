@@ -3,6 +3,7 @@
  */
 package com.vizier.agent.filewatcher;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 
 import com.vizier.client.VizierBackendClient;
+import com.vizier.constants.VizierAgentConstants;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
@@ -30,8 +32,9 @@ public class FileWatcher {
 	
 	public static void main(String[] args) {
 		String path = args[0];
-		String dir = path.substring(0,path.lastIndexOf("/"));
-		String filename = path.substring(path.lastIndexOf("/")+1);
+		String dir = path.substring(0,path.lastIndexOf(File.separator));
+		String filename = path.substring(path.lastIndexOf(File.separator)+1);
+
 		try {
 			// Creates a instance of WatchService.
 			WatchService watcher = FileSystems.getDefault().newWatchService();
