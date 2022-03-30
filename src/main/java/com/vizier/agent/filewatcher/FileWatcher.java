@@ -58,7 +58,7 @@ public class FileWatcher {
 										+ ". File affected: " + event.context() + ".");
 						try {
 							// Creating a FileReader object
-							FileReader fr = new FileReader(path+"/"+filename);
+							FileReader fr = new FileReader(path);
 
 							// Creating a FileWriter object
 							FileWriter fw = new FileWriter("state.txt");
@@ -91,9 +91,7 @@ public class FileWatcher {
 									"File reading and writing both done");
                         }
                         catch (IOException e) {
-                            // Display message
-                            System.out.println(
-                                    "There are some IOException");
+                            e.printStackTrace();
                         }
 					} else if (ENTRY_DELETE.equals(kind)) {
 						System.out.println("Entry was deleted from log dir.");

@@ -54,7 +54,7 @@ public class Runner {
 		directoryInitializer = new DirectoryInitializerImpl();
 		directoryInitializer.setUpDirectory();
 		directoryInitializer.createIniFile();
-		directoryInitializer.getAllStubs(directoryPath, stubsDirectoryPath);
+		directoryInitializer.getAllStubs("http://localhost:8080/", stubsDirectoryPath);
 		
 		// 3. Create a new python file
 		String[] pythonFilePath={VizierAgentConstants.directoryPath+ File.separator+args[0]};
@@ -62,11 +62,13 @@ public class Runner {
 		// 4. Fetch cell contents
 		//vizierBackendClient.fetchCellContentTo(cellIdentifier, pythonFilePath[0]);
 		
+		// 6. Launch editor
+		editorLauncher.openDefaultEditor(pythonFilePath[0]);
+				
 		// 5. Start file watchers
 		FileWatcher.main(pythonFilePath);
 
-		// 6. Launch editor
-		editorLauncher.openDefaultEditor(pythonFilePath[0]);
+		
 	}
 
 }
