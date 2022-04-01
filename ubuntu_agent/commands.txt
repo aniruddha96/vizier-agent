@@ -1,0 +1,9 @@
+copy vizier.desktop to /usr/share/applications
+
+run sudo update-desktop-database
+
+run xdg-mime default vizier.desktop x-scheme-handler/x-vizier-client
+
+for testing :
+from browser x-vizier-client:aaa
+or run xdg-open "x-vizier-client:aaa"

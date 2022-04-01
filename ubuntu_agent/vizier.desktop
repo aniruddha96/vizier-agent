@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=vizier URL Handler
+GenericName=vizier
+Comment=Handle URL Scheme 
+Exec=/home/aniruddha/echo.sh %u
+Terminal=true
+Type=Application
+MimeType=x-scheme-handler/x-vizier-client;
+Categories=TextEditor;
+Name[en_US]= vizier text handler
