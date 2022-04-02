@@ -9,5 +9,5 @@ Windows Registry Editor Version 5.00
 [HKEY_CLASSES_ROOT\x-vizier-client\shell\open]
 
 [HKEY_CLASSES_ROOT\x-vizier-client\shell\open\command]
-@="\"E:\\client.bat\""
+@="\"D:\\stubserverjava\\vizier-agent2\\agent.bat\" \"%1\""
 

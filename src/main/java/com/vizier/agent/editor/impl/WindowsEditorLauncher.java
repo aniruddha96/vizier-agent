@@ -21,7 +21,8 @@ public class WindowsEditorLauncher implements EditorLauncher{
 			File file = new File(filePath);
 			if(!Desktop.isDesktopSupported())
 			{
-				System.out.println("not supported");
+				Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", filePath});
+
 				return false;
 			}
 			Desktop desktop = Desktop.getDesktop();
