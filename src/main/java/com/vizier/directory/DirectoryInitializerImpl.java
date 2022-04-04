@@ -54,6 +54,7 @@ public class DirectoryInitializerImpl implements DirectoryInitializer{
     public boolean createTempFile(String filePath) {
         try {
             File myObj = new File(filePath);
+            
             if (myObj.createNewFile()) {
                 System.out.println("File created: " + myObj.getName());
             } else {

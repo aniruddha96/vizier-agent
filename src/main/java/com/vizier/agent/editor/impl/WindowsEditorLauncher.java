@@ -8,6 +8,7 @@ import com.vizier.constants.VizierAgentConstants;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author aniruddha
@@ -17,19 +18,14 @@ public class WindowsEditorLauncher implements EditorLauncher{
 
 	public boolean openDefaultEditor(String filePath) {
 		try
-		{
-			File file = new File(filePath);
-			if(!Desktop.isDesktopSupported())
-			{
-				Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", filePath});
-
-				return false;
-			}
-			Desktop desktop = Desktop.getDesktop();
-			if(file.exists()) {
-				desktop.open(file);
-				return true;
-			}
+		{ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", filePath);
+		try {
+		    Process p = pb.start();
+		    long pid = p.pid();
+		    System.out.println(pid);
+		} catch (IOException ex) {
+		    // ...
+		}
 		}
 		catch(Exception e)
 		{
