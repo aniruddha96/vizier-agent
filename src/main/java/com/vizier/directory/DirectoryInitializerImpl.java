@@ -5,8 +5,12 @@ import com.vizier.stub.client.VizierStubServerClientImpl;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+
+import org.springframework.util.FileCopyUtils;
 
 import static com.vizier.constants.VizierAgentConstants.directoryPath;
 import static com.vizier.constants.VizierAgentConstants.iniFilePath;
@@ -26,9 +30,15 @@ public class DirectoryInitializerImpl implements DirectoryInitializer{
               System.out.println("File created: " + myObj.getName());
               FileWriter myWriter = new FileWriter(iniFilePath);
               myWriter.write("[mypy]\n\nmypy_path=stubs");
+              myWriter.append("\n\n[flake8]");
               myWriter.close();
               System.out.println("Successfully wrote to the file.");
-
+            
+            // if(!myObj.exists()){
+            //     InputStream configFileStream = this.getClass()
+            //     .getClassLoader()
+            //     .getResourceAsStream("setup.cfg");
+            //     FileCopyUtils.copy(configFileStream, new FileOutputStream(iniFilePath));
             } else {
               System.out.println("File already exists.");
             }
