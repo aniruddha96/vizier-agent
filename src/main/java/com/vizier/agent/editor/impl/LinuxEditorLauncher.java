@@ -14,8 +14,12 @@ public class LinuxEditorLauncher implements EditorLauncher{
 	public boolean openDefaultEditor(String filePath) {
 		ProcessBuilder builder = new ProcessBuilder();
 		Process p = null;
-		try {
-			//TODO: Add open system call for linux
+		try {			
+			//Both methods working.
+			// String[] command = { "xdg-open", filePath };
+			// Process process = new ProcessBuilder(command).start();
+			Process process = Runtime.getRuntime().exec(String.format("xdg-open %s", filePath));
+			System.out.println("Process Id: " + process.pid());
 			return true;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
