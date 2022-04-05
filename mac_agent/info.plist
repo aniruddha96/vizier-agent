@@ -1,0 +1,13 @@
+//add the following lines to the end of info.plist after saving the applescript as application
+
+<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>test_protocol</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>x-vizier-client</string>
+			</array>
+		</dict>
+</array>
