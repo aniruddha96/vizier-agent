@@ -1,0 +1,4 @@
+tell application "Terminal"
+	activate
+	do script "java -jar /Users/sakshimehra/Downloads/vizier-agent-main/target/vizier-agent2-0.0.1-SNAPSHOT.jar"
+end tell
