@@ -1,0 +1,3 @@
+on open location this_url
+	do shell script "java /Users/sakshimehra/CS_Sem_2/editorLocal/src/main/java/Editor.java"
+end open location
