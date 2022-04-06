@@ -1,21 +1,17 @@
 package com.vizier.client;
 
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import org.springframework.*;
-import java.net.URL;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,8 +28,11 @@ public class VizierBackendClientImpl implements VizierBackendClient {
 
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
             System.out.println(response.body());
-            
-            
+
+            if(response.statusCode() == 200){
+                ParseResponseToFile(response.body(), filePath);
+            }
+            return true;
         }
         catch(Exception e){
             System.out.println("An Exception occurred while trying to fetch cell contents from Vizierdb");
@@ -46,8 +45,27 @@ public class VizierBackendClientImpl implements VizierBackendClient {
         return false;
     }
 
-    public static void ParseResponseToFile(){
-        
+    public static void ParseResponseToFile(String response, String filePath){
+        try{
+            JSONObject responseObject = new JSONObject(response);
+            String cellContent = responseObject.getString("text");
+            File file = new File(filePath);
+            if(!file.exists() && !file.isDirectory()) {
+                file.createNewFile();
+            }
+            FileWriter writer = new FileWriter(filePath);
+            writer.write(cellContent);
+            writer.close();
+            System.out.println("Successfully written cell contents to the file.");
+        }catch(JSONException e) {
+            e.printStackTrace();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
     
 }
