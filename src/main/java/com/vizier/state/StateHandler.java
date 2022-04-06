@@ -22,26 +22,28 @@ public class StateHandler {
 	}
 	
 	
-	public static void refresh() {
+	public static void refresh(String file) {
 		try {
-			state = objectMapper.readValue(new File("D:\\github\\vizier-agent\\cell_content\\state.json"), State.class);
+			state = objectMapper.readValue(new File(file), State.class);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	public static void init(String file) {
-		File f =new File("D:\\github\\vizier-agent\\cell_content\\state.json");
+		File f =new File(file);
 
 		try {
 			if(f.createNewFile()) {
 				state = new State();
 				state.setWatcherActive(false);
-				flush();
+				state.setCellIdentifier(file);
+				flush(f.getPath());
 			}else {
-				state = objectMapper.readValue(new File("D:\\github\\vizier-agent\\cell_content\\state.json"), State.class);
+				state = objectMapper.readValue(new File(file), State.class);
 				state.setWatcherActive(false);
-				flush();
+				state.setCellIdentifier(file);
+				flush(file);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -50,9 +52,9 @@ public class StateHandler {
 
 	}
 	
-	private static void flush() {
+	private static void flush(String file) {
 		try {
-			objectMapper.writeValue(new File("D:\\github\\vizier-agent\\cell_content\\state.json"), state);
+			objectMapper.writeValue(new File(file), state);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -18,14 +18,22 @@ public class State implements Serializable{
 
 	boolean watcherActive;
 
+	String cellIdentifier;
+
 	public boolean isWatcherActive() {
 		return watcherActive;
+	}
+
+	public String getCellIdentifier(){
+		return cellIdentifier;
 	}
 
 	public void setWatcherActive(boolean watcherActive) {
 		this.watcherActive = watcherActive;
 	}
-	
-	
+
+	public void setCellIdentifier(String cellIdentifier){
+		this.cellIdentifier = cellIdentifier;
+	}
 	
 }
