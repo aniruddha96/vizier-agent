@@ -1,0 +1,11 @@
+on open location this_url
+	set oldDelims to AppleScript's text item delimiters
+	set newDelims to {"x-vizier-client://"}
+	set AppleScript's text item delimiters to newDelims
+	set arg1 to item 2 of the text items of this_url
+	tell application "Terminal"
+		activate
+		do script "java -jar /Users/sakshimehra/Downloads/vizier-agent-main/target/vizier-agent2-0.0.1-SNAPSHOT.jar --args " & arg1
+	end tell
+	set AppleScript's text item delimiters to oldDelims
+end open location

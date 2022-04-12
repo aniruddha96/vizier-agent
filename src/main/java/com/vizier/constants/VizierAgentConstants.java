@@ -10,4 +10,6 @@ public class VizierAgentConstants {
     public static String iniFile = "setup.cfg";
     public static String tempPythonFile = "temp.py";
     public static String stateInfoFile = "state.json";
+    // public static String iniFilePath = directoryPath+File.separator+"mypy.ini";
+    public static String iniOriginalFilePath = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"mypy.ini";
 }
