@@ -4,13 +4,16 @@
 package com.vizier.agent.filewatcher;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 import org.apache.commons.io.monitor.FileAlterationListener;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 
 import com.vizier.client.VizierBackendClient;
+import com.vizier.client.VizierBackendClientImpl;
 import com.vizier.state.StateHandler;
+import com.vizier.state.State;
 
 /**
  * @author aniruddha
@@ -32,7 +35,9 @@ public class FileWatcher2 extends FileAlterationListenerAdaptor{
 				e.printStackTrace();
 			}
 		}else if(file.getName().contentEquals("temp.py")) {
-			System.out.println("Python file changes, sync with backend");
+			System.out.println("Python file changes, sync with backend.");
+			VizierBackendClient vizierBackendClient = new VizierBackendClientImpl();
+			vizierBackendClient.syncCell(StateHandler.getState().getCellIdentifier(), file.getAbsolutePath());
 		}
 	}
 

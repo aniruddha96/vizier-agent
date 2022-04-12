@@ -31,7 +31,7 @@ import static com.vizier.constants.VizierAgentConstants.directoryPath;
 import static com.vizier.constants.VizierAgentConstants.stubsDirectoryPath;
 import static com.vizier.constants.VizierAgentConstants.stubsDirectory;
 import static com.vizier.constants.VizierAgentConstants.tempPythonFile;
-import static com.vizier.constants.VizierAgentConstants.stateInfoFile;;
+import static com.vizier.constants.VizierAgentConstants.stateInfoFile;
 
 /**
  * @author aniruddha
@@ -57,7 +57,7 @@ public class Runner {
 
 		// TODO: Add case for Windows OS
 		// args = new String[] { "temp.py" };
-		args = new String[] {"x-vizier-client:opencell/localhost:5000/vizier-db/api/v1/projects/1/branches/1/workflows/5/modules/0"};
+		args = new String[] {"x-vizier-client:opencell/localhost:5000/vizier-db/api/v1/projects/1/branches/1/workflows/12/modules/0"};
 		new Runner().runner(args);
 
 	}
@@ -71,7 +71,9 @@ public class Runner {
 		String cellDirectoryPath = directoryInitializer.setUpDirectory(cellIdentifier);
 		directoryInitializer.createIniFile(cellDirectoryPath);
 		directoryInitializer.getAllStubs("http://localhost:8080/", cellDirectoryPath + stubsDirectory);
-		StateHandler.init(cellDirectoryPath + stateInfoFile);
+
+		String stateFilePath = cellDirectoryPath + stateInfoFile;
+		StateHandler.init(cellIdentifier, stateFilePath);
 
 		// 3. Create a new python file
 		String pythonFilePath = cellDirectoryPath + tempPythonFile;
@@ -81,7 +83,7 @@ public class Runner {
 		// Check if the below can be coded into a method call
 		boolean cellContentsFetched = false;
 		try {
-			VizierBackendClient vizierBackendClient = new VizierBackendClientImpl();
+			vizierBackendClient = new VizierBackendClientImpl();
 			cellContentsFetched = vizierBackendClient.fetchCellContentTo(cellIdentifier, pythonFilePath);
         }catch(URISyntaxException e){
             e.printStackTrace();

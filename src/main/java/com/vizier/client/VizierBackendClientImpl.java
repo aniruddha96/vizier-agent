@@ -6,12 +6,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +35,11 @@ public class VizierBackendClientImpl implements VizierBackendClient {
             if(response.statusCode() == 200){
                 ParseResponseToFile(response.body(), filePath);
             }
+            else{
+                //TODO: Handle failure response.
+                System.out.println("Could not fetch cell contents from Vizierdb." + response.body());
+                return false;
+            }
             return true;
         }
         catch(Exception e){
@@ -41,7 +49,76 @@ public class VizierBackendClientImpl implements VizierBackendClient {
         return false;
     }
 
-    public boolean syncCell(){
+    public boolean syncCell(String cellIdentifier, String filePath){
+        try{          
+            List<String> cellIdentifierList = new ArrayList<String>(Arrays.asList(cellIdentifier.split("/")));
+            cellIdentifierList.remove(0); //TODO: Check if this can be done in a better way.
+            String projectId = cellIdentifierList.get(cellIdentifierList.indexOf("projects") + 1);
+            String branchId = cellIdentifierList.get(cellIdentifierList.indexOf("branches") + 1);
+            String currWfId = cellIdentifierList.get(cellIdentifierList.indexOf("workflows") + 1);
+            String moduleId = cellIdentifierList.get(cellIdentifierList.indexOf("modules") + 1);
+
+            //Fetch latest workflowId from Vizierdb
+            int latestwfId = Integer.parseInt(currWfId);
+            String url = String.format("http://localhost:5000/vizier-db/api/v1/projects/%s/branches/%s/head", projectId, branchId);
+            String postURL = "";
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                                            .uri(URI.create(url))
+                                            .build();
+
+            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+            System.out.println(response.body());
+
+            if(response.statusCode() == 200){
+                JSONObject responseObject = new JSONObject(response.body());
+                latestwfId = Integer.parseInt(responseObject.getString("id"));
+                //JSONArray linksArray = responseObject.getJSONArray("links");
+                //postURL = linksArray.getJSONObject(0).getString("href");
+                postURL = String.format("http://localhost:5000/vizier-db/api/v1/projects/%s/branches/%s/workflows/%s/modules/%s", projectId, branchId, latestwfId, moduleId);
+            }
+            else{
+                //TODO: Handle failure response.
+                System.out.println("Could not fetch workflowID from Vizierdb." + response.body());
+                return false;
+            }
+
+            //Make a PUT Request to Vizierdb with the updated cell contents.
+            //Construct request body.
+            JSONObject requestObject = new JSONObject();
+            requestObject.put("packageId", "script");
+            requestObject.put("commandId", "python");
+            JSONArray argArray = new JSONArray();
+            JSONObject dataObj = new JSONObject();
+            dataObj.put("id", "source");
+            dataObj.put("value", Files.readString(Paths.get(filePath)));
+            argArray.put(dataObj);
+            requestObject.put("arguments", argArray);
+
+
+            //postURL = String.format("http://localhost:5000/vizier-db/api/v1/projects/%s/branches/%s/workflows/%s/modules/%s", projectId, branchId, latestwfId, moduleId);
+            request = HttpRequest.newBuilder()
+                                .uri(URI.create(postURL))
+                                .headers("Content-Type", "application/json")
+                                .PUT(HttpRequest.BodyPublishers.ofString(requestObject.toString()))
+                                .build();
+            response = client.send(request, BodyHandlers.ofString());
+            System.out.println(response.body());
+
+            if(response.statusCode() == 200){
+                System.out.println("Successfully updated cell contents to Vizierdb." + response.body());
+                return true;
+            }
+            else{
+                //TODO: Handle failure response.
+                System.out.println("Could not sync cell contents to Vizierdb." + response.body());
+                return false;
+            }
+        }
+        catch(Exception e){
+            System.out.println("An Exception occurred while trying to sync cell contents to Vizierdb");
+            e.printStackTrace();
+        }
         return false;
     }
 

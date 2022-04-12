@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.vizier.constants.VizierAgentConstants.stateInfoFile;
 
 /**
  * @author aniruddha
@@ -30,19 +31,19 @@ public class StateHandler {
 			e.printStackTrace();
 		}
 	}
-	public static void init(String file) {
+	public static void init(String cellIdentifier, String file) {
 		File f =new File(file);
 
 		try {
 			if(f.createNewFile()) {
 				state = new State();
 				state.setWatcherActive(false);
-				state.setCellIdentifier(file);
+				state.setCellIdentifier(cellIdentifier);
 				flush(f.getPath());
 			}else {
 				state = objectMapper.readValue(new File(file), State.class);
 				state.setWatcherActive(false);
-				state.setCellIdentifier(file);
+				state.setCellIdentifier(cellIdentifier);
 				flush(file);
 			}
 		} catch (IOException e) {

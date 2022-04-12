@@ -49,15 +49,7 @@ public class DirectoryInitializerImpl implements DirectoryInitializer{
 
     public boolean createIniFile(String directoryPath) {
         try {
-            File file = new File(directoryPath + iniFile);
-            // if (file.createNewFile()) {
-            //   System.out.println("File created: " + file.getName());
-            //   FileWriter myWriter = new FileWriter(iniFilePath);
-            //   myWriter.write("[mypy]\n\nmypy_path=stubs");
-            //   myWriter.append("\n\n[flake8]");
-            //   myWriter.close();
-            //   System.out.println("Successfully wrote to the file.");
-            
+            File file = new File(directoryPath + iniFile);            
             if(!file.exists()){
                 InputStream configFileStream = this.getClass()
                 .getClassLoader()
