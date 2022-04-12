@@ -10,9 +10,9 @@ import com.vizier.stub.client.VizierStubServerClient;
  */
 public interface DirectoryInitializer {
 
-	public boolean setUpDirectory();
+	public String setUpDirectory(String cellIdentifier);
 	
-	public boolean createIniFile();
+	public boolean createIniFile(String directoryPath);
 	
 	public boolean getAllStubs(String serverAddress, String extractTo);
 

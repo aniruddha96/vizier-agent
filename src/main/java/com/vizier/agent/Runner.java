@@ -10,6 +10,7 @@ import com.vizier.agent.filewatcher.FileWatcher2;
 import com.vizier.agent.filewatcher.FileWatcherHandler;
 import com.vizier.agent.filewatcher.FileWatcher;
 import com.vizier.client.VizierBackendClient;
+import com.vizier.client.VizierBackendClientImpl;
 import com.vizier.constants.VizierAgentConstants;
 import com.vizier.directory.DirectoryInitializer;
 import com.vizier.directory.DirectoryInitializerImpl;
@@ -17,6 +18,7 @@ import com.vizier.state.StateHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
@@ -27,6 +29,9 @@ import org.apache.commons.io.monitor.FileAlterationObserver;
 
 import static com.vizier.constants.VizierAgentConstants.directoryPath;
 import static com.vizier.constants.VizierAgentConstants.stubsDirectoryPath;
+import static com.vizier.constants.VizierAgentConstants.stubsDirectory;
+import static com.vizier.constants.VizierAgentConstants.tempPythonFile;
+import static com.vizier.constants.VizierAgentConstants.stateInfoFile;
 
 /**
  * @author aniruddha
@@ -51,34 +56,47 @@ public class Runner {
 		// TODO: Add case for linux OS
 
 		// TODO: Add case for Windows OS
-		args = new String[] { "temp.py" };
+		// args = new String[] { "temp.py" };
+		args = new String[] {"x-vizier-client:opencell/localhost:5000/vizier-db/api/v1/projects/1/branches/1/workflows/13/modules/0"};
 		new Runner().runner(args);
 
 	}
 
 	void runner(String[] args) throws IOException {
 		// 1. Parse args
+		String cellIdentifier = args[0]; // parse from args, String only as a placeholder
+		
 		// 2. Create directory and initialize it
-		String cellIdentifier = null; // parse from args, String only as a placeholder
 		directoryInitializer = new DirectoryInitializerImpl();
-		directoryInitializer.setUpDirectory();
-		directoryInitializer.createIniFile();
-		//directoryInitializer.getAllStubs("http://localhost:8080/", stubsDirectoryPath);
+		String cellDirectoryPath = directoryInitializer.setUpDirectory(cellIdentifier);
+		directoryInitializer.createIniFile(cellDirectoryPath);
+		directoryInitializer.getAllStubs("http://localhost:8080/", cellDirectoryPath + stubsDirectory);
 
-		StateHandler.init("");
+		String stateFilePath = cellDirectoryPath + stateInfoFile;
+		StateHandler.init(cellIdentifier, stateFilePath);
+
 		// 3. Create a new python file
-		String[] pythonFilePath = { VizierAgentConstants.directoryPath + File.separator + args[0] };
-		directoryInitializer.createTempFile(pythonFilePath[0]);
+		String pythonFilePath = cellDirectoryPath + tempPythonFile;
+		directoryInitializer.createTempFile(pythonFilePath);
+
 		// 4. Fetch cell contents
-		// vizierBackendClient.fetchCellContentTo(cellIdentifier, pythonFilePath[0]);
+		// Check if the below can be coded into a method call
+		boolean cellContentsFetched = false;
+		try {
+			vizierBackendClient = new VizierBackendClientImpl();
+			cellContentsFetched = vizierBackendClient.fetchCellContentTo(cellIdentifier, pythonFilePath);
+        }catch(URISyntaxException e){
+            e.printStackTrace();
+        }
 
-		// 6. Launch editor
-		editorLauncher.openDefaultEditor(pythonFilePath[0]);
-
-		// 5. Start file watchers
-		// FileWatcher.main(pythonFilePath);
-
-		FileWatcherHandler.start(directoryPath);
+		if(cellContentsFetched){
+			// 6. Launch editor
+			editorLauncher.openDefaultEditor(pythonFilePath);
+	
+			// 5. Start file watchers
+			// FileWatcher.main(pythonFilePath);	
+			FileWatcherHandler.start(cellDirectoryPath);
+		}
     }
 	
 
