@@ -94,9 +94,8 @@ public class VizierBackendClientImpl implements VizierBackendClient {
             dataObj.put("value", Files.readString(Paths.get(filePath)));
             argArray.put(dataObj);
             requestObject.put("arguments", argArray);
-
-
-            //postURL = String.format("http://localhost:5000/vizier-db/api/v1/projects/%s/branches/%s/workflows/%s/modules/%s", projectId, branchId, latestwfId, moduleId);
+            
+            //Make a PUT call to save the data in backend.
             request = HttpRequest.newBuilder()
                                 .uri(URI.create(postURL))
                                 .headers("Content-Type", "application/json")
