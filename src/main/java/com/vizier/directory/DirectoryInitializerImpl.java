@@ -26,11 +26,11 @@ public class DirectoryInitializerImpl implements DirectoryInitializer{
             String projectId = cellIdentifierList.get(cellIdentifierList.indexOf("projects") + 1);
             String branchId = cellIdentifierList.get(cellIdentifierList.indexOf("branches") + 1);
             String moduleId = cellIdentifierList.get(cellIdentifierList.indexOf("modules") + 1);
-            
+
             File file = new File(directoryPath + File.separator
                                     + String.join("", host.split(":")) + File.separator
                                     + projectId + File.separator
-                                    + branchId + File.separator 
+                                    + branchId + File.separator
                                     + moduleId + File.separator
                                     );
             if(!file.exists()){
@@ -81,10 +81,10 @@ public class DirectoryInitializerImpl implements DirectoryInitializer{
             File myObj = new File(filePath);
             if (myObj.createNewFile()) {
                 System.out.println("File created: " + myObj.getName());
-                FileWriter myWriter = new FileWriter(filePath);
-                myWriter.write("from stubs.pycell.client import vizierdb #Do not delete this line");
-                myWriter.close();
-                System.out.println("Successfully wrote to the file.");
+               // FileWriter myWriter = new FileWriter(filePath);
+               // myWriter.write("from stubs.pycell.client import vizierdb #Do not delete this line");
+               // myWriter.close();
+               // System.out.println("Successfully wrote to the file.");
             } else {
                 System.out.println("File already exists.");
             }
