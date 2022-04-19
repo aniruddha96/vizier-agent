@@ -19,6 +19,8 @@ import com.vizier.state.StateHandler;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
@@ -57,9 +59,36 @@ public class Runner {
 
 		// TODO: Add case for Windows OS
 		// args = new String[] { "temp.py" };
-		args = new String[] {"x-vizier-client:opencell/localhost:5000/vizier-db/api/v1/projects/1/branches/1/workflows/13/modules/0"};
-		new Runner().runner(args);
+		//args = new String[] {"x-vizier-client:opencell/localhost:5000/vizier-db/api/v1/projects/1/branches/1/workflows/13/modules/0"};
+		
+		if(args[0].contains("opencell")) {
+			new Runner().runner(args);
+		}else if(args[0].contains("endcell")) {
+			stopAgent(args[0]);
+		}
+		
 
+	}
+	
+	public static void stopAgent(String url) {
+		List<String> cellIdentifierList = Arrays.asList(url.split("/"));
+        String host = cellIdentifierList.get(1); //TODO: Change this
+        String projectId = cellIdentifierList.get(cellIdentifierList.indexOf("projects") + 1);
+        String branchId = cellIdentifierList.get(cellIdentifierList.indexOf("branches") + 1);
+        String moduleId = cellIdentifierList.get(cellIdentifierList.indexOf("modules") + 1);
+        
+        String filePath = directoryPath + File.separator
+                                + String.join("", host.split(":")) + File.separator
+                                + projectId + File.separator
+                                + branchId + File.separator 
+                                + moduleId + File.separator
+                                + "state.json";
+        File file = new File(filePath);
+        if(file.exists()){
+            StateHandler.refresh(filePath);
+            StateHandler.getState().setWatcherActive(false);
+            StateHandler.flush(filePath);
+        }
 	}
 
 	void runner(String[] args) throws IOException {
