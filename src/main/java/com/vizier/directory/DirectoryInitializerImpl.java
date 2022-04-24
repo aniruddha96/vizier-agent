@@ -47,15 +47,15 @@ public class DirectoryInitializerImpl implements DirectoryInitializer{
 
     public boolean createIniFile(String directoryPath) {
         try {
-            File file = new File(directoryPath + iniFile);            
+            File file = new File(directoryPath + iniFilePath1);
             if(!file.exists()){
                 InputStream configFileStream = this.getClass()
                 .getClassLoader()
-                .getResourceAsStream(iniFile);
+                .getResourceAsStream(iniFilePath1);
                 FileCopyUtils.copy(configFileStream, new FileOutputStream(file.getPath()));
-                System.out.println("Config File created.");
+                System.out.println("Mypy ini File created.");
             } else {
-              System.out.println("Config file already exists.");
+              System.out.println("Mypy ini file already exists.");
             }
           } catch (IOException e) {
             System.out.println("An error occurred.");
