@@ -53,7 +53,7 @@ public class StateHandler {
 
 	}
 	
-	private static void flush(String file) {
+	public static void flush(String file) {
 		try {
 			objectMapper.writeValue(new File(file), state);
 		} catch (IOException e) {
