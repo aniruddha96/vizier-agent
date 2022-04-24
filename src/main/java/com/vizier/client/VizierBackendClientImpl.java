@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class VizierBackendClientImpl implements VizierBackendClient {
     public boolean fetchCellContentTo(String cellIdentifier, String filePath) throws URISyntaxException {
@@ -91,7 +92,21 @@ public class VizierBackendClientImpl implements VizierBackendClient {
             JSONArray argArray = new JSONArray();
             JSONObject dataObj = new JSONObject();
             dataObj.put("id", "source");
-            dataObj.put("value", Files.readString(Paths.get(filePath)));
+            File myObj = new File(filePath);
+            Scanner myReader = new Scanner(myObj);
+            boolean firstLine = true;
+            StringBuilder builder = new StringBuilder();
+            while (myReader.hasNextLine()) {
+                if(firstLine){
+                    myReader.nextLine();
+                    firstLine = false;
+                    continue;
+                }
+                builder.append(myReader.nextLine()+"\n");
+            }
+            myReader.close();
+            dataObj.put("value", builder.toString());
+            //dataObj.put("value", Files.readString(Paths.get(filePath)));
             argArray.put(dataObj);
             requestObject.put("arguments", argArray);
             
