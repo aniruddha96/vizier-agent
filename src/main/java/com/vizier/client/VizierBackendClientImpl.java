@@ -102,7 +102,8 @@ public class VizierBackendClientImpl implements VizierBackendClient {
                     firstLine = false;
                     continue;
                 }
-                builder.append(myReader.nextLine()+"\n");
+                builder.append(myReader.nextLine());
+                builder.append(System.getProperty("line.separator"));
             }
             myReader.close();
             dataObj.put("value", builder.toString());
@@ -148,6 +149,7 @@ public class VizierBackendClientImpl implements VizierBackendClient {
             writer.write("from stubs.pycell.client import vizierdb #Do not delete this line\n");
             writer.write(cellContent);
             writer.close();
+
             System.out.println("Successfully written cell contents to the file.");
         }catch(JSONException e) {
             e.printStackTrace();

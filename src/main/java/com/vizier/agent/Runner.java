@@ -19,6 +19,9 @@ import com.vizier.state.StateHandler;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 
@@ -89,6 +92,21 @@ public class Runner {
             StateHandler.getState().setWatcherActive(false);
             StateHandler.flush(filePath);
         }
+		try {
+			String pythonFilePath = directoryPath + File.separator
+					+ String.join("", host.split(":")) + File.separator
+					+ projectId + File.separator
+					+ branchId + File.separator
+					+ moduleId + File.separator
+					+ "temp.py";
+			File pythonFile = new File(filePath);
+			if(pythonFile.exists()){
+				Files.write(Paths.get(pythonFilePath), System.getProperty("line.separator").getBytes(), StandardOpenOption.APPEND);
+				Files.write(Paths.get(pythonFilePath), "#This file is no longer being synced".getBytes(), StandardOpenOption.APPEND);
+			}
+		}catch (IOException e) {
+			System.out.println(e);
+		}
 	}
 
 	void runner(String[] args) throws IOException {
