@@ -8,7 +8,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
@@ -18,6 +23,8 @@ import java.nio.file.StandardCopyOption;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.vizier.stub.client.VizierStubServerClient;
 
@@ -28,6 +35,12 @@ import com.vizier.stub.client.VizierStubServerClient;
 public class VizierStubServerClientImpl implements VizierStubServerClient {
 
 	public boolean getAllStubs(String serverAddress, String extractTo) throws MalformedURLException {
+		// This code needs to be modified at little after making changes to lauch stub server 
+		// from Vizier db.
+		String stubServerAddress = GetStubServerAddress();
+		if(!GetStubServerAddress().isEmpty()){
+			serverAddress = stubServerAddress;
+		}
 		URL url = new URL(serverAddress+"getallstubs");
 		try (InputStream in = url.openStream();
 				ReadableByteChannel rbc = Channels.newChannel(in);
@@ -105,4 +118,35 @@ public class VizierStubServerClientImpl implements VizierStubServerClient {
 	        return normalizePath;
 	    }
 
+	private static String GetStubServerAddress(){
+		try{
+			String url = "http://localhost:5000/vizier-db/api/v1/";
+            
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+
+            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+
+            if(response.statusCode() == 200){
+				JSONObject responseObject = new JSONObject(response.body());
+                JSONArray linksArray = responseObject.getJSONArray("links");
+				for(int i = 0; i < linksArray.length(); i++){
+					if(linksArray.getJSONObject(i).getString("rel").equals("python.stubserver")){
+						return linksArray.getJSONObject(i).getString("href");
+					}
+				}
+            }
+            else{
+                //TODO: Handle failure response.
+                System.out.println("Could not fetch cell stubserver address from Vizierdb." + response.body());
+                return "";
+            }
+            return "";
+        }
+        catch(Exception e){
+            System.out.println("An Exception occurred while trying to fetch stubserver address from Vizierdb");
+            e.printStackTrace();
+        }
+		return "";
+	}
 }

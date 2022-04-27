@@ -53,6 +53,7 @@ public class DirectoryInitializerImpl implements DirectoryInitializer{
                 .getClassLoader()
                 .getResourceAsStream(iniFilePath1);
                 FileCopyUtils.copy(configFileStream, new FileOutputStream(file.getPath()));
+                configFileStream.close();
                 System.out.println("Mypy ini File created.");
             } else {
               System.out.println("Mypy ini file already exists.");

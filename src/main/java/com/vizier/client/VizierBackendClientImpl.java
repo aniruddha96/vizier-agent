@@ -31,7 +31,7 @@ public class VizierBackendClientImpl implements VizierBackendClient {
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
 
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-            System.out.println(response.body());
+            // System.out.println(response.body());
 
             if(response.statusCode() == 200){
                 ParseResponseToFile(response.body(), filePath);
@@ -59,7 +59,7 @@ public class VizierBackendClientImpl implements VizierBackendClient {
             String currWfId = cellIdentifierList.get(cellIdentifierList.indexOf("workflows") + 1);
             String moduleId = cellIdentifierList.get(cellIdentifierList.indexOf("modules") + 1);
 
-            //Fetch latest workflowId from Vizierdb
+            //Fetch latest workflowId from Vizierdb by making a head call
             int latestwfId = Integer.parseInt(currWfId);
             String url = String.format("http://localhost:5000/vizier-db/api/v1/projects/%s/branches/%s/head", projectId, branchId);
             String postURL = "";
@@ -69,7 +69,7 @@ public class VizierBackendClientImpl implements VizierBackendClient {
                                             .build();
 
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-            System.out.println(response.body());
+            // System.out.println(response.body());
 
             if(response.statusCode() == 200){
                 JSONObject responseObject = new JSONObject(response.body());
@@ -118,7 +118,7 @@ public class VizierBackendClientImpl implements VizierBackendClient {
                                 .PUT(HttpRequest.BodyPublishers.ofString(requestObject.toString()))
                                 .build();
             response = client.send(request, BodyHandlers.ofString());
-            System.out.println(response.body());
+            // System.out.println(response.body());
 
             if(response.statusCode() == 200){
                 System.out.println("Successfully updated cell contents to Vizierdb." + response.body());
