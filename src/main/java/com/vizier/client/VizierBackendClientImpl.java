@@ -7,8 +7,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -114,21 +117,19 @@ public class VizierBackendClientImpl implements VizierBackendClient {
             requestObject.put("arguments", argArray);
             
             //Make a PUT call to save the data in backend.
-            request = HttpRequest.newBuilder()
-                                .uri(URI.create(postURL))
-                                .headers("Content-Type", "application/json")
-                                .PUT(HttpRequest.BodyPublishers.ofString(requestObject.toString()))
-                                .build();
-            response = client.send(request, BodyHandlers.ofString());
+            HttpPut putRequest = new HttpPut(postURL);
+            
+            putRequest.setEntity(new StringEntity(requestObject.toString()));
+            CloseableHttpResponse putResponse = client.execute(putRequest);
             // System.out.println(response.body());
 
-            if(response.statusCode() == 200){
-                System.out.println("Successfully updated cell contents to Vizierdb." + response.body());
+            if(putResponse.getStatusLine().getStatusCode() == 200){
+                System.out.println("Successfully updated cell contents to Vizierdb." + putResponse);
                 return true;
             }
             else{
                 //TODO: Handle failure response.
-                System.out.println("Could not sync cell contents to Vizierdb." + response.body());
+                System.out.println("Could not sync cell contents to Vizierdb." + putResponse);
                 return false;
             }
         }

@@ -52,6 +52,7 @@ public class Runner {
 	 * @param args
 	 */
 	public static void main(String[] args) throws IOException {
+		System.out.println("Operating system detected : "+System.getProperty("os.name"));
 		boolean isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
 		if (isMac) {
 			editorLauncher = new MacEditorLauncher();
