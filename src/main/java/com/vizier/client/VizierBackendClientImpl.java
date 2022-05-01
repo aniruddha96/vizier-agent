@@ -6,13 +6,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -27,18 +29,19 @@ public class VizierBackendClientImpl implements VizierBackendClient {
             cellIdentifierList.remove(0); //TODO: Check if this can be done in a better way.
             String url = "http://" + String.join("/", cellIdentifierList);
             
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+            CloseableHttpClient client = HttpClients.createDefault();
+            HttpGet request = new HttpGet(url);
 
-            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+            CloseableHttpResponse response = client.execute(request);
             // System.out.println(response.body());
 
-            if(response.statusCode() == 200){
-                ParseResponseToFile(response.body(), filePath);
+            if(response.getStatusLine().getStatusCode() == 200){
+            	HttpEntity entity = response.getEntity();
+                ParseResponseToFile(EntityUtils.toString(entity), filePath);
             }
             else{
                 //TODO: Handle failure response.
-                System.out.println("Could not fetch cell contents from Vizierdb." + response.body());
+                System.out.println("Could not fetch cell contents from Vizierdb." + response);
                 return false;
             }
             return true;
@@ -63,16 +66,15 @@ public class VizierBackendClientImpl implements VizierBackendClient {
             int latestwfId = Integer.parseInt(currWfId);
             String url = String.format("http://localhost:5000/vizier-db/api/v1/projects/%s/branches/%s/head", projectId, branchId);
             String postURL = "";
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                                            .uri(URI.create(url))
-                                            .build();
-
-            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+            CloseableHttpClient client = HttpClients.createDefault();
+            HttpGet   request = new HttpGet (url);
+            CloseableHttpResponse response = client.execute(request);
+            
             // System.out.println(response.body());
 
-            if(response.statusCode() == 200){
-                JSONObject responseObject = new JSONObject(response.body());
+            if(response.getStatusLine().getStatusCode() == 200){
+            	HttpEntity entity = response.getEntity();
+                JSONObject responseObject = new JSONObject(EntityUtils.toString(entity));
                 latestwfId = Integer.parseInt(responseObject.getString("id"));
                 //JSONArray linksArray = responseObject.getJSONArray("links");
                 //postURL = linksArray.getJSONObject(0).getString("href");
@@ -80,7 +82,7 @@ public class VizierBackendClientImpl implements VizierBackendClient {
             }
             else{
                 //TODO: Handle failure response.
-                System.out.println("Could not fetch workflowID from Vizierdb." + response.body());
+                System.out.println("Could not fetch workflowID from Vizierdb." + response);
                 return false;
             }
 

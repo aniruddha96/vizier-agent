@@ -21,8 +21,6 @@ public class WindowsEditorLauncher implements EditorLauncher{
 		{ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", filePath);
 		try {
 		    Process p = pb.start();
-		    long pid = p.pid();
-		    System.out.println(pid);
 		} catch (IOException ex) {
 		    // ...
 		}

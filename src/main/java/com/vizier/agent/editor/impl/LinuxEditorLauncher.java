@@ -19,7 +19,6 @@ public class LinuxEditorLauncher implements EditorLauncher{
 			// String[] command = { "xdg-open", filePath };
 			// Process process = new ProcessBuilder(command).start();
 			Process process = Runtime.getRuntime().exec(String.format("xdg-open %s", filePath));
-			System.out.println("Process Id: " + process.pid());
 			return true;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
