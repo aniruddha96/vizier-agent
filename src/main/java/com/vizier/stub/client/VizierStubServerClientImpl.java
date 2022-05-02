@@ -139,9 +139,9 @@ public class VizierStubServerClientImpl implements VizierStubServerClient {
 			} else {
 				// TODO: Handle failure response.
 				System.out.println("Could not fetch cell stubserver address from Vizierdb.");
-				return null;
+				return "";
 			}
-			return null;
+			return "";
 		} catch (Exception e) {
 			System.out.println("An Exception occurred while trying to fetch stubserver address from Vizierdb");
 			e.printStackTrace();
