@@ -37,12 +37,12 @@ public class StateHandler {
 		try {
 			if(f.createNewFile()) {
 				state = new State();
-				state.setWatcherActive(false);
+				state.setWatcherActive(true);
 				state.setCellIdentifier(cellIdentifier);
 				flush(f.getPath());
 			}else {
 				state = objectMapper.readValue(new File(file), State.class);
-				state.setWatcherActive(false);
+				state.setWatcherActive(true);
 				state.setCellIdentifier(cellIdentifier);
 				flush(file);
 			}

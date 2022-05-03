@@ -26,7 +26,7 @@ public class FileWatcher2 extends FileAlterationListenerAdaptor{
 		if(file.getName().contentEquals("state.json")) {
 			try {
 				StateHandler.refresh(file.getPath());
-				if(StateHandler.getState().isWatcherActive()) {
+				if(!StateHandler.getState().isWatcherActive()) {
 					System.out.println("State json alerted to stop watching file");
 					FileWatcherHandler.getMonitor().stop();
 				}			
@@ -34,7 +34,7 @@ public class FileWatcher2 extends FileAlterationListenerAdaptor{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else if(file.getName().contentEquals("temp.py")) {
+		}else if(StateHandler.getState().isWatcherActive() && StateHandler.getState().isWatcherActive() && file.getName().contentEquals("temp.py")) {
 			System.out.println("Python file changes, syncing changes with backend.");
 			VizierBackendClient vizierBackendClient = new VizierBackendClientImpl();
 			vizierBackendClient.syncCell(StateHandler.getState().getCellIdentifier(), file.getAbsolutePath());

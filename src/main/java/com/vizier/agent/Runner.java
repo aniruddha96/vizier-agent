@@ -119,12 +119,12 @@ public class Runner {
 		directoryInitializer.createIniFile(cellDirectoryPath);
 		directoryInitializer.getAllStubs("http://localhost:8080/", cellDirectoryPath + stubsDirectory);
 
-		String stateFilePath = cellDirectoryPath + stateInfoFile;
-		StateHandler.init(cellIdentifier, stateFilePath);
-
 		// 3. Create a new python file
 		String pythonFilePath = cellDirectoryPath + tempPythonFile;
 		directoryInitializer.createTempFile(pythonFilePath);
+
+		String stateFilePath = cellDirectoryPath + stateInfoFile;
+		StateHandler.init(cellIdentifier, stateFilePath);
 
 		// 4. Fetch cell contents
 		// Check if the below can be coded into a method call
