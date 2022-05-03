@@ -4,6 +4,7 @@
 package com.vizier.agent;
 
 import com.vizier.agent.editor.EditorLauncher;
+import com.vizier.agent.editor.impl.LinuxEditorLauncher;
 import com.vizier.agent.editor.impl.MacEditorLauncher;
 import com.vizier.agent.editor.impl.WindowsEditorLauncher;
 import com.vizier.agent.filewatcher.FileWatcher2;
@@ -52,18 +53,17 @@ public class Runner {
 	 * @param args
 	 */
 	public static void main(String[] args) throws IOException {
-		boolean isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
-		if (isMac) {
+		System.out.println("Operating system detected : "+System.getProperty("os.name"));
+		String os = System.getProperty("os.name").toLowerCase();
+		
+		if (os.startsWith("mac")) {
 			editorLauncher = new MacEditorLauncher();
-		} else {
+		} else if(os.startsWith("linux")){
+			editorLauncher = new LinuxEditorLauncher();
+		} else{
 			editorLauncher = new WindowsEditorLauncher();
 		}
-		// TODO: Add case for linux OS
 
-		// TODO: Add case for Windows OS
-		// args = new String[] { "temp.py" };
-		//args = new String[] {"x-vizier-client:opencell/localhost:5000/vizier-db/api/v1/projects/1/branches/1/workflows/13/modules/0"};
-		
 		if(args[0].contains("opencell")) {
 			new Runner().runner(args);
 		}else if(args[0].contains("endcell")) {

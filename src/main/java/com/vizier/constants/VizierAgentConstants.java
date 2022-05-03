@@ -13,4 +13,5 @@ public class VizierAgentConstants {
     public static String stateInfoFile = "state.json";
     // public static String iniFilePath = directoryPath+File.separator+"mypy.ini";
     public static String iniOriginalFilePath = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"mypy.ini";
+    public static String vizierAPI = "http://localhost:5000/vizider-db/api/v1/";
 }
