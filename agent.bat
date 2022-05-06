@@ -1,4 +1,4 @@
-D:
-cd D:\github\vizier-agent
-java -jar D:\github\vizier-agent\target\vizier-agent2-0.0.1-SNAPSHOT.jar %1
+set var=%1
+set var=%var:x-vizier-client:=%
+java -jar VIZIERJARPATH '%var%'
 cmd /k
