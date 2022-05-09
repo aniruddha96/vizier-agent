@@ -149,7 +149,7 @@ public class VizierBackendClientImpl implements VizierBackendClient {
                 file.createNewFile();
             }
             FileWriter writer = new FileWriter(filePath);
-            writer.write("from stubs.pycell.client import vizierdb #Do not delete this line\n");
+            writer.write("from pycell.client import vizierdb #Do not delete this line\n");
             writer.write(cellContent);
             writer.close();
 

@@ -83,7 +83,7 @@ public class DirectoryInitializerImpl implements DirectoryInitializer{
             if (myObj.createNewFile()) {
                 System.out.println("File created: " + myObj.getName());
                 FileWriter myWriter = new FileWriter(filePath);
-                myWriter.write("from stubs.pycell.client import vizierdb #Do not delete this line");
+                myWriter.write("from pycell.client import vizierdb #Do not delete this line");
                 myWriter.close();
                 System.out.println("Successfully wrote to the file.");
             } else {
