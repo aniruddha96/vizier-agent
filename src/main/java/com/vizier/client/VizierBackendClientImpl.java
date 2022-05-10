@@ -27,19 +27,28 @@ import java.util.Scanner;
 
 public class VizierBackendClientImpl implements VizierBackendClient {
     public boolean fetchCellContentTo(String cellIdentifier, String filePath) throws URISyntaxException {
+        /* This method fetches python code contents for a cell identifier by @cellIdentifier and writes
+        the contents returned in the reponse to a file identified by @filePath.
+        */
         try{
+            /*Construct a url for GET call of the format:
+            http://localhost:5000/vizier-db/api/v1/projects/<projectId>/branches/<branchId>/workflows/<workflowId>/modules/<moduleId>
+            from input @cellIdentifier which has the format:
+            x-vizier-client:opencell/localhost:5000/vizier-db/api/v1/projects/<projectId>/branches/<branchId>/workflows/<workflowId>/modules/<moduleId>
+            */
             List<String> cellIdentifierList = new ArrayList<String>(Arrays.asList(cellIdentifier.split("/")));
             cellIdentifierList.remove(0); //TODO: Check if this can be done in a better way.
+
             String url = "http://" + String.join("/", cellIdentifierList);
             
             CloseableHttpClient client = HttpClients.createDefault();
             HttpGet request = new HttpGet(url);
 
             CloseableHttpResponse response = client.execute(request);
-            // System.out.println(response.body());
 
             if(response.getStatusLine().getStatusCode() == 200){
-            	HttpEntity entity = response.getEntity();
+                HttpEntity entity = response.getEntity();
+                /*Write cell contents to file in @filePath */
                 ParseResponseToFile(EntityUtils.toString(entity), filePath);
             }
             else{
@@ -56,8 +65,9 @@ public class VizierBackendClientImpl implements VizierBackendClient {
         return false;
     }
 
-    public boolean syncCell(String cellIdentifier, String filePath){
-        try{          
+    public boolean syncCell(String cellIdentifier, String filePath) {
+        try {
+            //Extract the cell identifier parameters from @cellIdentifier
             List<String> cellIdentifierList = new ArrayList<String>(Arrays.asList(cellIdentifier.split("/")));
             cellIdentifierList.remove(0); //TODO: Check if this can be done in a better way.
             String projectId = cellIdentifierList.get(cellIdentifierList.indexOf("projects") + 1);
@@ -65,25 +75,25 @@ public class VizierBackendClientImpl implements VizierBackendClient {
             String currWfId = cellIdentifierList.get(cellIdentifierList.indexOf("workflows") + 1);
             String moduleId = cellIdentifierList.get(cellIdentifierList.indexOf("modules") + 1);
 
-            //Fetch latest workflowId from Vizierdb by making a head call
+            //Fetch latest workflowId from Vizierdb by making a head call to vizier api
             int latestwfId = Integer.parseInt(currWfId);
-            String url = String.format("http://localhost:5000/vizier-db/api/v1/projects/%s/branches/%s/head", projectId, branchId);
+            String url = String.format("http://localhost:5000/vizier-db/api/v1/projects/%s/branches/%s/head", projectId,
+                    branchId);
             String postURL = "";
             CloseableHttpClient client = HttpClients.createDefault();
-            HttpGet   request = new HttpGet (url);
+            HttpGet request = new HttpGet(url);
             CloseableHttpResponse response = client.execute(request);
-            
-            // System.out.println(response.body());
 
-            if(response.getStatusLine().getStatusCode() == 200){
-            	HttpEntity entity = response.getEntity();
+            if (response.getStatusLine().getStatusCode() == 200) {
+                HttpEntity entity = response.getEntity();
                 JSONObject responseObject = new JSONObject(EntityUtils.toString(entity));
                 latestwfId = Integer.parseInt(responseObject.getString("id"));
                 //JSONArray linksArray = responseObject.getJSONArray("links");
                 //postURL = linksArray.getJSONObject(0).getString("href");
-                postURL = String.format("http://localhost:5000/vizier-db/api/v1/projects/%s/branches/%s/workflows/%s/modules/%s", projectId, branchId, latestwfId, moduleId);
-            }
-            else{
+                postURL = String.format(
+                        "http://localhost:5000/vizier-db/api/v1/projects/%s/branches/%s/workflows/%s/modules/%s",
+                        projectId, branchId, latestwfId, moduleId);
+            } else {
                 //TODO: Handle failure response.
                 System.out.println("Could not fetch workflowID from Vizierdb." + response);
                 return false;
@@ -102,7 +112,7 @@ public class VizierBackendClientImpl implements VizierBackendClient {
             boolean firstLine = true;
             StringBuilder builder = new StringBuilder();
             while (myReader.hasNextLine()) {
-                if(firstLine){
+                if (firstLine) {
                     myReader.nextLine();
                     firstLine = false;
                     continue;
@@ -115,25 +125,22 @@ public class VizierBackendClientImpl implements VizierBackendClient {
             //dataObj.put("value", Files.readString(Paths.get(filePath)));
             argArray.put(dataObj);
             requestObject.put("arguments", argArray);
-            
+
             //Make a PUT call to save the data in backend.
             HttpPut putRequest = new HttpPut(postURL);
-            
+
             putRequest.setEntity(new StringEntity(requestObject.toString()));
             CloseableHttpResponse putResponse = client.execute(putRequest);
-            // System.out.println(response.body());
 
-            if(putResponse.getStatusLine().getStatusCode() == 200){
+            if (putResponse.getStatusLine().getStatusCode() == 200) {
                 System.out.println("Successfully updated cell contents to Vizierdb." + putResponse);
                 return true;
-            }
-            else{
+            } else {
                 //TODO: Handle failure response.
                 System.out.println("Could not sync cell contents to Vizierdb." + putResponse);
                 return false;
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println("An Exception occurred while trying to sync cell contents to Vizierdb");
             e.printStackTrace();
         }
@@ -141,7 +148,9 @@ public class VizierBackendClientImpl implements VizierBackendClient {
     }
 
     public static void ParseResponseToFile(String response, String filePath){
-        try{
+        /*Parses @response and writes the contents to a file identified by @filePath */
+        try {
+            
             JSONObject responseObject = new JSONObject(response);
             String cellContent = responseObject.getString("text");
             File file = new File(filePath);
@@ -149,6 +158,8 @@ public class VizierBackendClientImpl implements VizierBackendClient {
                 file.createNewFile();
             }
             FileWriter writer = new FileWriter(filePath);
+
+            // Add a default statement to import vizier related stubs that are present in local stubs folder.
             writer.write("from pycell.client import vizierdb #Do not delete this line\n");
             writer.write(cellContent);
             writer.close();
