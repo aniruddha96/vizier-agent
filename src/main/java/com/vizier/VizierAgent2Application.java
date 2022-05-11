@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.vizier.agent.Runner;
 
+/* the main class- entry point to the springboot application */
 @SpringBootApplication
 public class VizierAgent2Application implements CommandLineRunner{
 
