@@ -1,6 +1,6 @@
 # vizier-agent
 This repository contains the source code for local agent that works with [VizierDB](https://github.com/VizierDB/vizier-scala)
-to open cells in local editor. This project aims to achieve the Open In Editor functionality for vizier notebook cells and mentioned in 
+to open cells in local editor. This project aims to achieve the Open In Editor functionality for vizier notebook cells as mentioned in 
 [Issue28](https://github.com/VizierDB/vizier-scala/issues/28).
 
 It has code components that enable flow of data to and from Vizier db when the local editor session is active.
