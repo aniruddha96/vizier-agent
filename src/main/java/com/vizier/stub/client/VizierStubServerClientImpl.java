@@ -32,14 +32,17 @@ import com.vizier.stub.client.VizierStubServerClient;
 
 /**
  * @author aniruddha
+ * @author ksphoorthi
  *
  */
 public class VizierStubServerClientImpl implements VizierStubServerClient {
 
 	public boolean getAllStubs(String serverAddress, String extractTo) throws MalformedURLException {
 		// This code needs to be modified at little after making changes to lauch stub
-		// server
-		// from Vizier db.
+		// server from Vizier db.
+		/* Fetch stubServer address from Vizier API. Fallback to the address returned in input 
+		*  if no address is returned from GetStubServerAddressCall
+		*/
 		String stubServerAddress = GetStubServerAddress();
 		if (!GetStubServerAddress().isEmpty()) {
 			serverAddress = stubServerAddress;
@@ -81,7 +84,7 @@ public class VizierStubServerClientImpl implements VizierStubServerClient {
 			ArchiveEntry entry;
 			while ((entry = ti.getNextEntry()) != null) {
 
-				// create a new path, zip slip validate
+				// Create a new path, zip slip validate
 				Path newPath = zipSlipProtect(entry, target);
 
 				if (entry.isDirectory()) {
@@ -120,6 +123,10 @@ public class VizierStubServerClientImpl implements VizierStubServerClient {
 	}
 
 	private static String GetStubServerAddress() {
+		/*
+		* This method makes a HTTP GET call to vizier api and extracts the stub server address
+		* from the "links" array returned in the response (HATEOAS). 
+		*/
 		CloseableHttpClient client = HttpClients.createDefault();
 		try {
 			String url = "http://localhost:5000/vizier-db/api/v1/";
