@@ -1,7 +1,7 @@
 package com.vizier.constants;
 
 import java.io.File;
-
+/** VizierAgentConstants class specifying all the constants used in the project */
 public class VizierAgentConstants {
     public static String directoryPath = "."+ File.separator+"cell_content";
     public static String stubsDirectoryPath = directoryPath+File.separator+"stubs";

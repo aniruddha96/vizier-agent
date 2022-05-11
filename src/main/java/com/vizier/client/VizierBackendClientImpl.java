@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+/** fetches cell contents to the given filepath */
 public class VizierBackendClientImpl implements VizierBackendClient {
     public boolean fetchCellContentTo(String cellIdentifier, String filePath) throws URISyntaxException {
         try{
@@ -55,7 +56,7 @@ public class VizierBackendClientImpl implements VizierBackendClient {
         }
         return false;
     }
-
+/** Snyc cell contents to vizierdb */
     public boolean syncCell(String cellIdentifier, String filePath){
         try{          
             List<String> cellIdentifierList = new ArrayList<String>(Arrays.asList(cellIdentifier.split("/")));

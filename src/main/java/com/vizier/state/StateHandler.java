@@ -31,6 +31,7 @@ public class StateHandler {
 			e.printStackTrace();
 		}
 	}
+	/* initialize the state file */
 	public static void init(String cellIdentifier, String file) {
 		File f =new File(file);
 

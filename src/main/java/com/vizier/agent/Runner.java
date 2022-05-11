@@ -77,7 +77,7 @@ public class Runner {
 		
 
 	}
-	
+	/* function to stop the agent and file syncing between local editor and webUI */
 	public static void stopAgent(String url) {
 		List<String> cellIdentifierList = Arrays.asList(url.split("/"));
         String host = cellIdentifierList.get(1); //TODO: Change this

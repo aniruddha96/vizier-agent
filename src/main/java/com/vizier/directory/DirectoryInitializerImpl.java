@@ -16,7 +16,7 @@ import java.util.List;
 import org.springframework.util.FileCopyUtils;
 
 import static com.vizier.constants.VizierAgentConstants.*;
-
+/** set up the directory where the cell contents will be stored as local file */
 public class DirectoryInitializerImpl implements DirectoryInitializer{
 
     public String setUpDirectory(String cellIdentifier) {
@@ -65,7 +65,7 @@ public class DirectoryInitializerImpl implements DirectoryInitializer{
           }
         return true;
     }
-
+    /* get stubs from the stubserver */
     public boolean getAllStubs(String serverAddress, String extractTo) {
         VizierStubServerClient stubServerClient = new VizierStubServerClientImpl();
         try {
