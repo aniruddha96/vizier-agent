@@ -9,6 +9,8 @@ import com.vizier.agent.editor.EditorLauncher;
  * @author aniruddha
  * @author sakshimehra
  */
+/** LinuxEditorLauncher class implementing the EditorLauncher interface for Linux OS*/
+
 public class LinuxEditorLauncher implements EditorLauncher{
 
 	public boolean openDefaultEditor(String filePath) {

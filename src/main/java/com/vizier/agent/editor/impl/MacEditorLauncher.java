@@ -11,6 +11,7 @@ import java.io.IOException;
  * @author aniruddha
  * @author sakshimehra
  */
+/** MacEditorLauncher class implementing the EditorLauncher interface for Mac OS*/
 public class MacEditorLauncher implements EditorLauncher{
 
 	public boolean openDefaultEditor(String filePath) throws IOException {
