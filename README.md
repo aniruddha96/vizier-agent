@@ -1,7 +1,9 @@
 # vizier-agent
 
 Prerequisites
-Java 8
+1.	Install Java JDK 8 and set the JAVA_HOME path to the JDK installation path.
+2.	Install mypy using the pip tool
+    python3 -m pip install mypy
 
 Windows Installation
 1) Open cmd
