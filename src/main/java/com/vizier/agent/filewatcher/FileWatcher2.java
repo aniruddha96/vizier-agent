@@ -35,7 +35,7 @@ public class FileWatcher2 extends FileAlterationListenerAdaptor{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else if(StateHandler.getState().isWatcherActive() && StateHandler.getState().isWatcherActive() && file.getName().contentEquals("temp.py")) {
+		}else if(StateHandler.getState().isWatcherActive() && file.getName().contentEquals("temp.py")) {
 			System.out.println("Python file changes, syncing changes with backend.");
 			VizierBackendClient vizierBackendClient = new VizierBackendClientImpl();
 			vizierBackendClient.syncCell(StateHandler.getState().getCellIdentifier(), file.getAbsolutePath());
