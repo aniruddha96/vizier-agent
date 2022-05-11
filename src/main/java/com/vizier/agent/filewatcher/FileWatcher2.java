@@ -19,6 +19,7 @@ import com.vizier.state.State;
  * @author aniruddha
  *
  */
+/** Filewatcher to look for changes in the locally opened file and uses state.json to stop watching the file */
 public class FileWatcher2 extends FileAlterationListenerAdaptor{
 
 	@Override

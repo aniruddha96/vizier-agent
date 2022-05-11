@@ -43,6 +43,7 @@ import static com.vizier.constants.VizierAgentConstants.stateInfoFile;
  * @author aniruddha
  *
  */
+/**main class - entry point into the application */
 public class Runner {
 
 	DirectoryInitializer directoryInitializer;
@@ -53,6 +54,7 @@ public class Runner {
 	 * @param args
 	 */
 	public static void main(String[] args) throws IOException {
+		// Detecting the OS of the system in use
 		System.out.println("Operating system detected : "+System.getProperty("os.name"));
 		String os = System.getProperty("os.name").toLowerCase();
 		
@@ -65,10 +67,14 @@ public class Runner {
 			editorLauncher = new WindowsEditorLauncher();
 		}
 
+
+		// open cell contents in local editor
 		/* Extract the cell action from the arguments and invoke the corresponding methods.*/
 		if(args[0].contains("opencell")) {
 			new Runner().runner(args);
-		}else if(args[0].contains("endcell")) {
+		}
+		// stop syncing the contents of local editor and webUI
+		else if(args[0].contains("endcell")) {
 			stopAgent(args[0]);
 		}	
 
