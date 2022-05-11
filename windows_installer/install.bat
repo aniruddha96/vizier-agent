@@ -6,7 +6,9 @@ set var=%var:\=\\%
 powershell -Command "(gc test.reg) -replace 'VIZIERPATH', '%var%' | Out-File -encoding ASCII test.reg"
 
 SET vizierjar=%cd%\..\target\vizier-agent2-0.0.1-SNAPSHOT.jar
+SET vizierinvokedir=%cd%\..
 powershell -Command "(gc ..\agent.bat) -replace 'VIZIERJARPATH', '%vizierjar%' | Out-File -encoding ASCII ..\agent.bat"
+powershell -Command "(gc ..\agent.bat) -replace 'VIZIERINVOKEDIR', '%vizierinvokedir%' | Out-File -encoding ASCII ..\agent.bat"
 
 reg import test.reg
 cd ..
